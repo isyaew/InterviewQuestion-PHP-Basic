@@ -1,0 +1,86 @@
+CREATE TABLE employee_profile_table (
+    employee_id INT PRIMARY KEY,
+    employee_no INT,
+    employee_name VARCHAR(50),
+    ic_no INT
+);
+
+INSERT INTO employee_profile_table (employee_id, employee_no, employee_name, ic_no)
+VALUES
+    (1, 1000, 'Ali', 1234),
+    (2, 1001, 'Ahmad', 2345),
+    (3, 1002, 'Koay', 3456),
+    (4, 1003, 'Lau', 4567);
+
+
+
+CREATE TABLE job_profile_table(
+    job_id INT PRIMARY KEY,
+    job_name VARCHAR(255) NOT NULL
+);
+
+INSERT INTO job_profile_table (job_id, job_name)
+VALUES
+    (1,'Finance'),
+    (2,'Developer'),
+    (3, 'Admin'),
+    (4, 'Senior Developer');
+
+
+CREATE TABLE employee_job_table (
+    employee_id INT,
+    job_id INT,
+    effective_date DATE
+);
+
+INSERT INTO employee_job_table (employee_id, job_id, effective_date)
+VALUES
+    (1, 2, '2019-01-01'),
+    (1, 4, '2020-01-01'),
+    (2, 2, '2018-01-01'),
+    (3, 3, '2017-05-14'),
+    (4, 1, '2019-06-09');
+
+*************************************************************************************
+SECTION B
+*************************************************************************************
+
+question a)
+
+UPDATE employee_job_table
+	SET job_id = 4, 
+	effective_date = '2020-01-01'
+WHERE employee_id = 1002;
+
+question b)
+
+SELECT e.employee_name, ejt.employee_id, ejt.effective_date, j.job_title
+FROM employee_job_table ejt
+JOIN employees e ON ejt.employee_id = e.employee_id
+JOIN jobs j ON ejt.job_id = j.job_id;
+
+question c)
+
+SELECT e.employee_name, ejt.employee_id, MAX(ejt.effective_date) as latest_effective_date, j.job_title
+FROM employee_job_table ejt
+JOIN employees e ON ejt.employee_id = e.employee_id
+JOIN jobs j ON ejt.job_id = j.job_id
+GROUP BY e.employee_name, ejt.employee_id, j.job_title;
+
+question d) 
+
+DELETE FROM employee_job_table
+WHERE employee_id IN (
+  SELECT employee_id
+    FROM employees
+  WHERE employee_no = 1000
+)
+
+AND job_id IN (
+  SELECT job_id
+    FROM jobs
+  WHERE job_title = 'YourJobTitle'
+)
+
+AND effective_date = '2020-01-01';
+
